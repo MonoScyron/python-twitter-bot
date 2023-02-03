@@ -1,95 +1,45 @@
 """
-TwitterBot class
+Controls your Twitter bot, uses SeleniumTwitter to access Twitter
 """
 
-from time import sleep
-from selenium import webdriver
-from selenium.common import TimeoutException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait
+import json
+import tracery
+import seleniumtwitter
+from typing import Tuple
+from tracery.modifiers import base_english
 
 
 class TwitterBot:
-    def __init__(self, email: str, username: str, password: str, headless=True):
+    def __init__(self, email: str, username: str, password: str):
         """
-        :param email: Registered email of the bot
-        :param username: Username of the bot
-        :param password: Password of the bot
+        :param email: Registered email of the twitter bot
+        :param username: Username of the twitter bot
+        :param password: Password of the twitter bot
         """
-        self.__email = email
-        self.__username = username
-        self.__password = password
+        # TODO: Uncomment this (commented to save time debugging, webdriver is slow)
+        # self.__twitter = seleniumtwitter.SeleniumTwitter(email=email, username=username, password=password)
 
-        if headless:
-            opt_chrome = Options()
-            opt_chrome.add_argument('--headless')
-            self.bot = webdriver.Chrome(
-                options=opt_chrome
-            )
-        else:
-            self.bot = webdriver.Chrome()
+    def generate_tweet(self, path: str = "./rules/tracery.json") -> None:
+        # TODO: Generate tweet and post it
+        # TODO: Add custom grammer for "The" (definitive article)
+        #   TODO: Article shouldn't be capitalized UNLESS it is first word
+        #   TODO: Article should be removed if name is plural
+        grammar = tracery.Grammar(json.load(open(path)))
+        grammar.add_modifiers(base_english)
+        print(grammar.flatten("#origin#"))
 
-        self.__wait = WebDriverWait(self.bot, timeout=5)
-        self.logged_in = False
+    def get_image(self, url: str) -> str:
+        # TODO: Check if url image is already downloaded in img folder, if not download_img(), return path to image
+        # ? Return as absolute path or relative path
+        return None
 
-    def __login(self) -> None:
-        """
-        Login to Twitter with provided credentials
-        :return: None
-        """
-        bot = self.bot
-        wait = self.__wait
-        bot.get('https://twitter.com/login')
+    def download_img(self, url: str) -> str:
+        # TODO: Download an image to the img folder, return path to download
+        # ? Return as absolute path or relative path
+        return None
 
-        # Enter email
-        email_input = wait.until(ec.visibility_of_element_located((By.NAME, 'text')))
-        email_input.clear()
-        email_input.send_keys(self.__email)
-        email_input.send_keys(Keys.RETURN)
-
-        try:
-            # Check if Twitter is suspicious about your account
-            if 'phone number' in wait.until(ec.visibility_of_element_located((By.ID, 'modal-header'))).text:
-                # Verify username
-                username_input = wait.until(ec.visibility_of_element_located((By.NAME, 'text')))
-                username_input.send_keys(self.__username)
-                username_input.send_keys(Keys.RETURN)
-                # Then enter password
-                pwd_input = wait.until(ec.visibility_of_element_located((By.NAME, 'password')))
-                pwd_input.clear()
-                pwd_input.send_keys(self.__password)
-                pwd_input.send_keys(Keys.RETURN)
-        except TimeoutException:
-            # Enter password directly if not sus
-            pwd_input = wait.until(ec.visibility_of_element_located((By.NAME, 'password')))
-            pwd_input.clear()
-            pwd_input.send_keys(self.__password)
-            pwd_input.send_keys(Keys.RETURN)
-
-        self.logged_in = True
-
-    def tweet(self, text: str) -> None:
-        if not self.logged_in:
-            self.__login()
-            sleep(3)
-
-        bot = self.bot
-        wait = self.__wait
-        bot.get('https://twitter.com/compose/tweet')
-
-        text_input = wait.until(ec.visibility_of_element_located((By.CLASS_NAME, 'public-DraftEditor-content')))
-        text_input.send_keys(text)
-        ActionChains(bot).key_down(Keys.CONTROL).send_keys(Keys.RETURN).key_up(Keys.CONTROL).perform()
-
-    def test_browser(self) -> None:
-        """
-        Open google.com as a test
-        :return: None
-        """
-        bot = self.bot
-        bot.get('https://www.google.com/')
-        sleep(10)
+    def generate_svg(self, svg: str) -> str:
+        # TODO: Generate an svg from given str and save as image in img folder, return path to image
+        # ? Return as absolute path or relative path
+        # TODO: Delete svg once done
+        return None

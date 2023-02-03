@@ -1,11 +1,12 @@
+"""
+Main driver
+"""
+
 import twitterbot
+from time import sleep
 from dotenv import dotenv_values
 
 env = dotenv_values('.env')
-email = env.get("EMAIL")
-username = env.get("USERNAME")
-password = env.get("PASSWORD")
+bot = twitterbot.TwitterBot(email=env.get("EMAIL"), username=env.get("USERNAME"), password=env.get("PASSWORD"))
 
-twitterbotbot = twitterbot.TwitterBot(email=email, username=username, password=password)
-twitterbotbot.login()
-twitterbotbot.tweet("A kitten is almost always indignant, unless it is a purple one.")
+# TODO: Write driver

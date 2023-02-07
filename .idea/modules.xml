@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/python-twitter-bot.iml" filepath="$PROJECT_DIR$/.idea/python-twitter-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/selenium-twitter-bot.iml" filepath="$PROJECT_DIR$/.idea/selenium-twitter-bot.iml" />
     </modules>
   </component>
 </project>

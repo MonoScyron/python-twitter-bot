@@ -3,10 +3,9 @@ Interface with Twitter via Selenium
 """
 import os
 from time import sleep
-from selenium import webdriver
+import undetected_chromedriver as uc
 from selenium.common import TimeoutException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -26,16 +25,23 @@ class SeleniumTwitter:
         self.__password = password
 
         if headless:
-            opt_chrome = Options()
+            opt_chrome = uc.ChromeOptions()
+            opt_chrome.headless = True
             opt_chrome.add_argument('--headless')
-            self.__browser = webdriver.Firefox(
-                options=opt_chrome
-            )
+            self.__driver = uc.Chrome(options=opt_chrome)
         else:
-            self.__browser = webdriver.Firefox()
+            self.__driver = uc.Chrome()
 
-        self.__wait = WebDriverWait(self.__browser, timeout=5)
+        self.__wait = WebDriverWait(self.__driver, timeout=5)
         self.logged_in = False
+
+    def teardown(self) -> None:
+        """
+        Closes all processes related to the webdriver
+        :return: None
+        """
+        # FIXME: Teardown causes WinError
+        self.__driver.quit()
 
     def tweet(self, text: str = None, pics: list[str] = None) -> None:
         """
@@ -47,7 +53,7 @@ class SeleniumTwitter:
         if not self.logged_in:
             self.login()
 
-        browser = self.__browser
+        browser = self.__driver
         wait = self.__wait
         browser.get('https://twitter.com/compose/tweet')
 
@@ -64,13 +70,14 @@ class SeleniumTwitter:
 
         # Send tweet
         ActionChains(browser).key_down(Keys.CONTROL).send_keys(Keys.RETURN).key_up(Keys.CONTROL).perform()
+        sleep(3)
 
     def login(self) -> None:
         """
         Login to Twitter with provided credentials
         :return: None
         """
-        browser = self.__browser
+        browser = self.__driver
         wait = self.__wait
         browser.get('https://twitter.com/login')
 
@@ -94,14 +101,14 @@ class SeleniumTwitter:
                 pwd_input.send_keys(Keys.RETURN)
         except TimeoutException:
             # Enter password directly if not sus
-            pwd_input = wait.until(ec.visibility_of_element_located((By.NAME, 'password')))
+            pwd_input = browser.find_element(By.NAME, 'password')
             pwd_input.clear()
             pwd_input.send_keys(self.__password)
             pwd_input.send_keys(Keys.RETURN)
 
-        sleep(5)
+        sleep(3)
         self.logged_in = True
 
     # TODO: DELETE THIS FUNCTION
     def get_browser(self):
-        return self.__browser
+        return self.__driver

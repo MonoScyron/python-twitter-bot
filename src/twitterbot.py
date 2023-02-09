@@ -3,9 +3,13 @@ Controls your Twitter bot, uses SeleniumTwitter to access Twitter
 """
 
 import json
-import seleniumtwitter
+
 import tracery
+from reportlab.graphics import renderPM
+from svglib.svglib import svg2rlg
 from tracery.modifiers import base_english
+
+import seleniumtwitter
 
 
 class TwitterBot:
@@ -43,25 +47,34 @@ class TwitterBot:
 
     def get_image(self, tag: str) -> str:
         # TODO: Given {img ...} tag, return path to image
-        # TODO: Given {svg ...} tag, generate svg and return path to generated image, delete svg after tweeted
+        # TODO: Given {svg ...} tag, pass <svg>...</svg> to generate_svg()
+        #   Return path to generated png from the svg
         # Return as relative path
-        return None
-
-    def generate_svg(self, svg: str) -> str:
-        # TODO: Generate an svg from given str and save as image in img folder, return path to image
-        # Return as relative path
-        # TODO: Delete svg once it is tweeted
         return None
 
     @staticmethod
-    def __rm_definitive(text: str, *params) -> str:
+    def __generate_svg(svg: str) -> str:
+        """
+        Generates PNG image from a SVG html tag (<svg>...</svg>)
+        :param svg: SVG to generate
+        :return: Relative path to generated PNG
+        """
+        to_temp = "./img/svg/temp_svg"
+        svg_f = open(f"{to_temp}.svg", "w")
+        svg_f.write(svg)
+        svg_f.close()
+        svg_pic = svg2rlg(f"{to_temp}.svg")
+        renderPM.drawToFile(svg_pic, f"{to_temp}.png")
+        return f"{to_temp}.png"
+
+    @staticmethod
+    def __rm_definitive(text: str) -> str:
         """
         Remove the definitive article of the text\n
         Ex: "The Beatles" -> "Beatles"
         Modifier should only be used on nouns and noun phrases\n
         :param text: Text to modify
-        :param params: No params accepted
-        :return:
+        :return: Modified text
         """
         if text.lower().startswith("the"):
             return text[3:].strip()

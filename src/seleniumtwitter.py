@@ -2,8 +2,8 @@
 Interface with Twitter via Selenium
 """
 import os
-from time import sleep
 import undetected_chromedriver as uc
+from time import sleep
 from selenium.common import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 
+# ? TODO: Consider switching to playwright [https://playwright.dev/] [https://playwright.dev/python/docs/intro]
 class SeleniumTwitter:
     def __init__(self, email: str, username: str, password: str, headless=True):
         """

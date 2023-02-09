@@ -131,3 +131,7 @@ dmypy.json
 # Testing files
 testing*.json
 testing.py
+
+# Temp files
+src/img/svg/*
+!svg/.gitkeep

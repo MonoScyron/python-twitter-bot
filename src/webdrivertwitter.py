@@ -1,5 +1,5 @@
 """
-Interface with Twitter via Selenium
+Interface with Twitter via a WebDriver
 """
 import os
 import undetected_chromedriver as uc
@@ -13,8 +13,8 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-# ? TODO: Consider switching to playwright [https://playwright.dev/] [https://playwright.dev/python/docs/intro]
-class SeleniumTwitter:
+# ? TODO: Consider switching to playwright [https://playwright.dev/python/docs/intro]
+class WebDriverTwitter:
     def __init__(self, email: str, username: str, password: str, headless=True):
         """
         :param email: Registered email of the twitter account

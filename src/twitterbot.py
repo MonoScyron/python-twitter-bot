@@ -1,5 +1,5 @@
 """
-Controls your Twitter bot, uses SeleniumTwitter to access Twitter
+Controls your Twitter bot, uses WebDriverTwitter to access Twitter
 """
 
 import json
@@ -9,7 +9,7 @@ from reportlab.graphics import renderPM
 from svglib.svglib import svg2rlg
 from tracery.modifiers import base_english
 
-import seleniumtwitter
+import webdrivertwitter
 
 
 class TwitterBot:
@@ -21,7 +21,7 @@ class TwitterBot:
         """
         self.__mods = {"rmd": self.__rm_definitive}
         # TODO: Uncomment this (commented to save time debugging, webdriver is slow)
-        self.__twitter = seleniumtwitter.SeleniumTwitter(email=email, username=username, password=password)
+        self.__twitter = webdrivertwitter.WebDriverTwitter(email=email, username=username, password=password)
 
     def shutdown(self) -> None:
         """
